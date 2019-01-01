@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'recipe.dart';
 import 'viewRecipe.dart';
 import 'uniWidgets.dart';
+//API keys is an ignored file in order to keep regenerated keys private
+import 'APIKeys.dart';
 
 void main() => runApp(MyApp());
 
@@ -90,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<Recipe>> getList(int page) async {
     String url =
-        'https://www.food2fork.com/api/search?key=696dcc4625a221d4741899f9761c69a2';
+        'https://www.food2fork.com/api/search?key=' + APIKeysClass.apiKey;
     if (page > 1) {
       url = url + "&page=" + page.toString();
     }

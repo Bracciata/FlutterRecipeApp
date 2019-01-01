@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
+import 'APIKeys.dart';
 
 class RecipePage extends StatefulWidget {
   RecipePage({Key key, this.recipeID, this.title}) : super(key: key);
@@ -40,9 +41,10 @@ class IngredientListView extends StatelessWidget {
 
 class RecipePageState extends State<RecipePage> {
   Future<Recipe> getRecipe() async {
-    String url =
-        'https://www.food2fork.com/api/get?key=696dcc4625a221d4741899f9761c69a2&rId=' +
-            widget.recipeID;
+    String url = 'https://www.food2fork.com/api/get?key=' +
+        APIKeysClass.apiKey +
+        '&rId=' +
+        widget.recipeID;
     final response = await http.get('$url');
     //Below can be compressed to one line easily
     var decoded = json.decode(response.body);
