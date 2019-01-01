@@ -4,7 +4,7 @@ import 'dart:async' show Future;
 import 'dart:convert';
 import 'recipe.dart';
 import 'viewRecipe.dart';
-
+import 'uniWidgets.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -20,17 +20,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//widgets
-class ErrorWidgetMain extends StatelessWidget {
-  ErrorWidgetMain({Key key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: new Text('issue dawg'),
-    );
-  }
-}
-
+//widget
 class RecipeListView extends StatelessWidget {
   final List<Recipe> recipes;
 
@@ -109,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasError) {
-                      return ErrorWidgetMain();
+                      return ErrorWidgetUni();
                     }
                     return RecipeListView(recipes: snapshot.data);
                   } else
