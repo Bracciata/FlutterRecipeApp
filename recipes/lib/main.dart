@@ -29,21 +29,22 @@ class RecipeListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(child:ListView.builder(
-        itemCount: recipes.length,
-        padding: const EdgeInsets.all(15.0),
-        itemBuilder: (context, position) {
-          return Column(
-            children: <Widget>[
-              Divider(height: 5.0),
-              ListTile(
-                title: Text('${recipes[position].title}'),
-                subtitle: Text('${recipes[position].publisher}'),
-                onTap: () => _onTapItem(context, recipes[position]),
-              ),
-            ],
-          );
-        }));
+    return Expanded(
+        child: ListView.builder(
+            itemCount: recipes.length,
+            padding: const EdgeInsets.all(15.0),
+            itemBuilder: (context, position) {
+              return Column(
+                children: <Widget>[
+                  Divider(height: 5.0),
+                  ListTile(
+                    title: Text('${recipes[position].title}'),
+                    subtitle: Text('${recipes[position].publisher}'),
+                    onTap: () => _onTapItem(context, recipes[position]),
+                  ),
+                ],
+              );
+            }));
   }
 
   void _onTapItem(BuildContext context, Recipe recipe) {

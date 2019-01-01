@@ -56,23 +56,24 @@ class RecipePageState extends State<RecipePage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Center(child:FutureBuilder<Recipe>(
-            future: getRecipe(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return ErrorWidgetUni();
-                }
-                return Column(children: [
-                  Text(snapshot.data.title),
-                  Container(
-                      child: new Expanded(
-                          child: IngredientListView(
-                    ingredients: snapshot.data.ingredients,
-                  )))
-                ]);
-              } else
-                return CircularProgressIndicator();
-            })));
+        body: Center(
+            child: FutureBuilder<Recipe>(
+                future: getRecipe(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return ErrorWidgetUni();
+                    }
+                    return Column(children: [
+                      Text(snapshot.data.title),
+                      Container(
+                          child: new Expanded(
+                              child: IngredientListView(
+                        ingredients: snapshot.data.ingredients,
+                      )))
+                    ]);
+                  } else
+                    return CircularProgressIndicator();
+                })));
   }
 }
