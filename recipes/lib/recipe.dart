@@ -5,7 +5,13 @@ class Recipe {
   String url;
   String imageUrl;
   List<dynamic> ingredients;
-  Recipe({this.id, this.title, this.publisher, this.url, this.imageUrl,this.ingredients});
+  Recipe(
+      {this.id,
+      this.title,
+      this.publisher,
+      this.url,
+      this.imageUrl,
+      this.ingredients});
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
         id: json['recipe_id'] as String,

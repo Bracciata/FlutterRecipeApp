@@ -66,7 +66,15 @@ class RecipePageState extends State<RecipePage> {
                     }
                     return Column(children: [
                       Text(snapshot.data.title),
-                      Image.network(snapshot.data.imageUrl),
+                      new Container(
+                          width: 190.0,
+                          height: 190.0,
+                          decoration: new BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: new DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image:
+                                      NetworkImage(snapshot.data.imageUrl)))),
                       Container(
                           child: new Expanded(
                               child: IngredientListView(
