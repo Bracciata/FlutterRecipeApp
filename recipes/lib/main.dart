@@ -68,7 +68,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String url =
-      'https://www.food2fork.com/api/search?key=7673071ca380b7ed9200e65a9003eb8f';
+      'https://www.food2fork.com/api/search?key=c170274c40994703421ea66c402d9d05';
 
   Future<List<Recipe>> getList() async {
     final response = await http.get('$url');
