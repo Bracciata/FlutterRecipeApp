@@ -87,7 +87,10 @@ class RecipePageState extends State<RecipePage> {
                                   image:
                                       NetworkImage(snapshot.data.imageUrl)))),
                       new InkWell(
-                          child: new Text('Open Full Recipe'),
+                          child: new Text('Open Full Recipe',
+                              style: new TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline)),
                           onTap: () => _launchURL(snapshot.data.url)),
                       Container(
                           child: new Expanded(
