@@ -4,6 +4,7 @@ import 'uniWidgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async' show Future;
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 class RecipePage extends StatefulWidget {
   RecipePage({Key key, this.recipeID, this.title}) : super(key: key);
@@ -50,6 +51,14 @@ class RecipePageState extends State<RecipePage> {
     return theRecipe;
   }
 
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   double imageSize;
   @override
   Widget build(BuildContext context) {
@@ -77,6 +86,9 @@ class RecipePageState extends State<RecipePage> {
                                   fit: BoxFit.fill,
                                   image:
                                       NetworkImage(snapshot.data.imageUrl)))),
+                      new InkWell(
+                          child: new Text('Open Full Recipe'),
+                          onTap: () => _launchURL(snapshot.data.url)),
                       Container(
                           child: new Expanded(
                               child: IngredientListView(
