@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async' show Future;
 import 'dart:convert';
+import 'recipe.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,6 +26,45 @@ class MyHomePage extends StatefulWidget {
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
+}
+
+//widgets
+class ErrorWidgetMain extends StatelessWidget {
+  ErrorWidgetMain({Key key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: new Text('issue dawg'),
+    );
+  }
+}
+
+class RecipeListView extends StatelessWidget {
+  final List<Recipe> recipes;
+
+  RecipeListView({Key key, this.recipes}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: ListView.builder(
+            itemCount: recipes.length,
+            padding: const EdgeInsets.all(15.0),
+            itemBuilder: (context, position) {
+              return Column(
+                children: <Widget>[
+                  Divider(height: 5.0),
+                  ListTile(
+                    title: Text('${recipes[position].title}'),
+                    subtitle: Text('${recipes[position].publisher}'),
+                    onTap: () => _onTapItem(context, recipes[position]),
+                  ),
+                ],
+              );
+            }));
+  }
+
+  void _onTapItem(BuildContext context, Recipe recipe) {}
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -61,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasError) {
-                      return ErrorWidget();
+                      return ErrorWidgetMain();
                     }
                     return RecipeListView(recipes: snapshot.data);
                   } else
@@ -72,56 +112,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-}
-
-class Recipe {
-  String title;
-  String publisher;
-  String id;
-  Recipe({this.id, this.title, this.publisher});
-  factory Recipe.fromJson(Map<String, dynamic> json) {
-    return Recipe(
-      id: json['recipe_id'] as String,
-      title: json['title'] as String,
-      publisher: json['publisher'] as String,
-    );
-  }
-}
-
-class ErrorWidget extends StatelessWidget {
-  ErrorWidget({Key key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: new Text('issue dawg'),
-    );
-  }
-}
-
-class RecipeListView extends StatelessWidget {
-  final List<Recipe> recipes;
-
-  RecipeListView({Key key, this.recipes}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-        child: ListView.builder(
-            itemCount: recipes.length,
-            padding: const EdgeInsets.all(15.0),
-            itemBuilder: (context, position) {
-              return Column(
-                children: <Widget>[
-                  Divider(height: 5.0),
-                  ListTile(
-                    title: Text('${recipes[position].title}'),
-                    subtitle: Text('${recipes[position].publisher}'),
-                    onTap: () => _onTapItem(context, recipes[position]),
-                  ),
-                ],
-              );
-            }));
-  }
-
-  void _onTapItem(BuildContext context, Recipe recipe) {}
 }
