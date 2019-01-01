@@ -58,6 +58,24 @@ class RecipeListView extends StatelessWidget {
   }
 }
 
+class ChangePageButton extends StatelessWidget {
+  final bool nextPage;
+  final Function nextPageFunction;
+  ChangePageButton({Key key, this.nextPage, this.nextPageFunction})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return nextPage
+        ? IconButton(
+            onPressed: () => nextPageFunction(1),
+            icon: new Icon(Icons.chevron_right))
+        : IconButton(
+            onPressed: () => nextPageFunction(-1),
+            icon: new Icon(Icons.chevron_left));
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -70,10 +88,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int page;
 
-  String url =
-      'https://www.food2fork.com/api/search?key=c170274c40994703421ea66c402d9d05';
-
   Future<List<Recipe>> getList(int page) async {
+    String url =
+        'https://www.food2fork.com/api/search?key=696dcc4625a221d4741899f9761c69a2';
     if (page > 1) {
       url = url + "&page=" + page.toString();
     }
@@ -91,30 +108,44 @@ class _MyHomePageState extends State<MyHomePage> {
     return recipeList;
   }
 
+  void nextPage(int amount) {
+    setState(() {
+      page += amount;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            FutureBuilder<List<Recipe>>(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Center(
+            child: FutureBuilder<List<Recipe>>(
                 future: getList(page),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasError) {
                       return ErrorWidgetUni();
                     }
-                    return RecipeListView(recipes: snapshot.data);
+                    return Column(children: <Widget>[
+                      new Container(
+                          child: RecipeListView(recipes: snapshot.data)),
+                      new Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          page == 1
+                              ? new Container()
+                              : ChangePageButton(
+                                  nextPage: false, nextPageFunction: nextPage),
+                          ChangePageButton(
+                              nextPage: true, nextPageFunction: nextPage)
+                        ],
+                      )
+                    ]);
                   } else
                     return CircularProgressIndicator();
-                })
-          ],
-        ),
-      ),
-    );
+                })));
   }
 
   @override

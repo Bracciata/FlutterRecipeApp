@@ -40,8 +40,8 @@ class IngredientListView extends StatelessWidget {
 class RecipePageState extends State<RecipePage> {
   Future<Recipe> getRecipe() async {
     String url =
-        'https://www.food2fork.com/api/get?key=c170274c40994703421ea66c402d9d05&rId=' +
-            widget.recipeID; 
+        'https://www.food2fork.com/api/get?key=696dcc4625a221d4741899f9761c69a2&rId=' +
+            widget.recipeID;
     final response = await http.get('$url');
     //Below can be compressed to one line easily
     var decoded = json.decode(response.body);
