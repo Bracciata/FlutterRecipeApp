@@ -1,28 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async' show Future;
+import 'dart:convert';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Recipes',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Recipe App Name'),
     );
   }
 }
@@ -37,14 +28,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String url = 'https://jsonplaceholder.typicode.com/posts';
+  String url =
+      'https://www.food2fork.com/api/search?key=7673071ca380b7ed9200e65a9003eb8f';
 
   Future<List<Recipe>> getList() async {
-    final response = await http.get('$url/1');
+    final response = await http.get('$url');
+    print(response.body + "hey");
     return recipesListFromJson(response.body);
   }
 
-  List<Recipe> recipesListFromJson(String json) {}
+  List<Recipe> recipesListFromJson(String jsonResponse) {
+    List<Recipe> recipeList = new List<Recipe>();
+    var decoded = json.decode(jsonResponse);
+    int count = decoded['count'] as int;
+    for (int i = 0; i < count; i++) {
+      recipeList.add(Recipe.fromJson(decoded['recipes'][i]));
+    }
+    return recipeList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (snapshot.hasError) {
                       return ErrorWidget();
                     }
-                    return ListView.builder();
+                    return RecipeListView(recipes: snapshot.data);
                   } else
                     return CircularProgressIndicator();
                 })
@@ -74,9 +76,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class Recipe {
   String title;
-  String body;
+  String publisher;
   String id;
-  Recipe({this.id, this.title, this.body});
+  Recipe({this.id, this.title, this.publisher});
+  factory Recipe.fromJson(Map<String, dynamic> json) {
+    return Recipe(
+      id: json['recipe_id'] as String,
+      title: json['title'] as String,
+      publisher: json['publisher'] as String,
+    );
+  }
+}
+
+class ErrorWidget extends StatelessWidget {
+  ErrorWidget({Key key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: new Text('issue dawg'),
+    );
+  }
 }
 
 class RecipeListView extends StatelessWidget {
@@ -86,23 +105,22 @@ class RecipeListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView.builder(
-          itemCount: recipes.length,
-          padding: const EdgeInsets.all(15.0),
-          itemBuilder: (context, position) {
-            return Column(
-              children: <Widget>[
-                Divider(height: 5.0),
-                ListTile(
-                  title: Text('${recipes[position].title}'),
-                  subtitle: Text('${recipes[position].body}'),
-                  onTap: () => _onTapItem(context, recipes[position]),
-                ),
-              ],
-            );
-          }),
-    );
+    return Expanded(
+        child: ListView.builder(
+            itemCount: recipes.length,
+            padding: const EdgeInsets.all(15.0),
+            itemBuilder: (context, position) {
+              return Column(
+                children: <Widget>[
+                  Divider(height: 5.0),
+                  ListTile(
+                    title: Text('${recipes[position].title}'),
+                    subtitle: Text('${recipes[position].publisher}'),
+                    onTap: () => _onTapItem(context, recipes[position]),
+                  ),
+                ],
+              );
+            }));
   }
 
   void _onTapItem(BuildContext context, Recipe recipe) {}
