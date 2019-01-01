@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async' show Future;
 import 'dart:convert';
 import 'recipe.dart';
+import 'viewRecipe.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,15 +18,6 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(title: 'Recipe App Name'),
     );
   }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
 }
 
 //widgets
@@ -64,7 +56,24 @@ class RecipeListView extends StatelessWidget {
             }));
   }
 
-  void _onTapItem(BuildContext context, Recipe recipe) {}
+  void _onTapItem(BuildContext context, Recipe recipe) {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) => new RecipePage(
+                  recipeID: recipe.id,
+                  title: recipe.title,
+                )));
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -73,7 +82,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<Recipe>> getList() async {
     final response = await http.get('$url');
-    print(response.body + "hey");
     return recipesListFromJson(response.body);
   }
 
