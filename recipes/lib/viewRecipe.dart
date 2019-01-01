@@ -14,6 +14,29 @@ class RecipePage extends StatefulWidget {
   RecipePageState createState() => RecipePageState();
 }
 
+class IngredientListView extends StatelessWidget {
+  final List<dynamic> ingredients;
+
+  IngredientListView({Key key, this.ingredients}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: ingredients.length,
+        padding: const EdgeInsets.all(15.0),
+        itemBuilder: (context, position) {
+          return Column(
+            children: <Widget>[
+              Divider(height: 1.0),
+              ListTile(
+                title: Text('${ingredients[position]}'),
+              ),
+            ],
+          );
+        });
+  }
+}
+
 class RecipePageState extends State<RecipePage> {
   Future<Recipe> getRecipe() async {
     String url =
@@ -21,36 +44,35 @@ class RecipePageState extends State<RecipePage> {
             widget.recipeID;
     final response = await http.get('$url');
     //Below can be compressed to one line easily
-    var decoded=json.decode(response.body);
-    var decStuffNeeded=decoded['recipe'];
-    Recipe theRecipe=Recipe.fromJsonIndividual(decStuffNeeded);
+    var decoded = json.decode(response.body);
+    var decStuffNeeded = decoded['recipe'];
+    Recipe theRecipe = Recipe.fromJsonIndividual(decStuffNeeded);
     return theRecipe;
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            FutureBuilder<Recipe>(
-                future: getRecipe(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasError) {
-                      return ErrorWidgetUni();
-                    }
-                    return new Text(snapshot.data.title);
-                  } else
-                    return CircularProgressIndicator();
-                })
-          ],
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-      ),
-    );
+        body: Center(child:FutureBuilder<Recipe>(
+            future: getRecipe(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return ErrorWidgetUni();
+                }
+                return Column(children: [
+                  Text(snapshot.data.title),
+                  Container(
+                      child: new Expanded(
+                          child: IngredientListView(
+                    ingredients: snapshot.data.ingredients,
+                  )))
+                ]);
+              } else
+                return CircularProgressIndicator();
+            })));
   }
 }
