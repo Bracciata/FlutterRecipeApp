@@ -68,10 +68,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int page;
+
   String url =
       'https://www.food2fork.com/api/search?key=c170274c40994703421ea66c402d9d05';
 
-  Future<List<Recipe>> getList() async {
+  Future<List<Recipe>> getList(int page) async {
+    if (page > 1) {
+      url = url + "&page=" + page.toString();
+    }
     final response = await http.get('$url');
     return recipesListFromJson(response.body);
   }
@@ -96,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             FutureBuilder<List<Recipe>>(
-                future: getList(),
+                future: getList(page),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasError) {
@@ -110,5 +115,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    page = 1;
+    super.initState();
   }
 }

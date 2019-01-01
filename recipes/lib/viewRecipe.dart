@@ -41,7 +41,7 @@ class RecipePageState extends State<RecipePage> {
   Future<Recipe> getRecipe() async {
     String url =
         'https://www.food2fork.com/api/get?key=c170274c40994703421ea66c402d9d05&rId=' +
-            widget.recipeID;
+            widget.recipeID; 
     final response = await http.get('$url');
     //Below can be compressed to one line easily
     var decoded = json.decode(response.body);
@@ -50,8 +50,10 @@ class RecipePageState extends State<RecipePage> {
     return theRecipe;
   }
 
+  double imageSize;
   @override
   Widget build(BuildContext context) {
+    imageSize = MediaQuery.of(context).size.width / 3;
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -67,8 +69,8 @@ class RecipePageState extends State<RecipePage> {
                     return Column(children: [
                       Text(snapshot.data.title),
                       new Container(
-                          width: 190.0,
-                          height: 190.0,
+                          width: imageSize,
+                          height: imageSize,
                           decoration: new BoxDecoration(
                               shape: BoxShape.circle,
                               image: new DecorationImage(
