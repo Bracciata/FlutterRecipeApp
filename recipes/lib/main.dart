@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:async' show Future;
 import 'dart:convert';
 import 'recipe.dart';
-import 'viewRecipe.dart';
+import 'viewRecipePage.dart';
 import 'uniWidgets.dart';
-//API keys is an ignored file in order to keep regenerated keys private
+// API keys is an ignored file in order to keep regenerated keys private
 import 'APIKeys.dart';
 
 void main() => runApp(MyApp());
@@ -88,7 +88,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int page;
+  int pageNumber;
 
   Future<List<Recipe>> getList(int page) async {
     String url =
@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void nextPage(int amount) {
     setState(() {
-      page += amount;
+      pageNumber += amount;
     });
   }
 
@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
             child: FutureBuilder<List<Recipe>>(
-                future: getList(page),
+                future: getList(pageNumber),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasError) {
@@ -136,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       new Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          page == 1
+                          pageNumber == 1
                               ? new Container()
                               : ChangePageButton(
                                   nextPage: false, nextPageFunction: nextPage),
@@ -152,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    page = 1;
+    pageNumber = 1;
     super.initState();
   }
 }
